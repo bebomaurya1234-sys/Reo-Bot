@@ -34,12 +34,27 @@ class on_member_join(commands.Cog):
                 return logger.error(f"Channel ID not found for member join log in {member.guild.name}")
             
             embed = discord.Embed(
-                title=f'{member.display_name} has joined the server',
-                description=f'**__User__** {member.mention}\n**__Username:__** {member.name}\n**__User ID:__** {member.id}\n\n**__Time:__** <t:{int(datetime.datetime.now().timestamp())}>',
-                color=color.green
-            )
-            embed.set_thumbnail(url=member.display_avatar.url)
-            embed.set_footer(text=f'User ID: {member.id}')
+    title="🌸・WELCOME TO ZYLO",
+    description=(
+        f"A warm welcome to {member.mention}! ✨\n\n"
+        "We're happy to have you with us.\n"
+        "Enjoy the vibes, connect with everyone,\n"
+        "and make some unforgettable moments. 💙\n\n"
+        "🌙 Stay active • Stay respectful • Have fun\n\n"
+        f"Now we have **{member.guild.member_count} members** <3"
+    ),
+    color=0xF5D6E3
+)
+
+embed.set_author(name="Zylo Community")
+
+# Small image on the right
+embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1550933493796569149/1551659525025697893/87d616ee6ae455cbc0e83e20063c08c7.gif?ex=6ab2c70b&is=6ab1758b&hm=47db0cae46f586aab06abe459bb6a503b7f94a8416efd9ceff0bd0213a6d3dce&")
+
+# Big welcome GIF
+embed.set_image(url="https://files.catbox.moe/zw2iub.gif")
+
+embed.set_footer(text="Zylo Community • Welcome aboard ✦")
             await self.bot.log.send(guild=member.guild,embed=embed,type=f"member_join_channel_id")
         except Exception as e:
             logger.error(f"Error in on_member_join.join_log: {e}")
