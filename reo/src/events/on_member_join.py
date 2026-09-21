@@ -1,4 +1,4 @@
-import datetime,asyncio,discord
+iimport datetime,asyncio,discord
 from discord.ext import commands
 
 from reo.console.logging import logger
@@ -325,4 +325,92 @@ class on_member_join(commands.Cog):
             
             autoroles = welcomer_cache.get('autoroles', [])
             if not autoroles:
-                return logger.warning(f"Gu
+                                return logger.warning(f"Guild {guild.name} has no autoroles")
+            
+            roles_to_add = []
+            for role in autoroles:
+                role = guild.get_role(int(role))
+                if role:
+                    if role.permissions.administrator:
+                        logger.warning(f"Role {role.name} in {guild.name} is an admin role")
+                        continue
+                    roles_to_add.append(role)
+            if not roles_to_add:
+                return logger.warning(f"Guild {guild.name} has no valid autoroles")
+            
+            await member.add_roles(*roles_to_add,reason="Autoroles by Welcomer System")
+        except Exception as e:
+            logger.error(f"Error in file {__file__} at line {traceback.extract_tb(sys.exc_info()[2])[0][1]}: {e}")
+
+    async def guild_autonick_module(self,member:discord.Member):
+        guild = member.guild
+        try:
+            welcomer_cache = self.bot.cache.welcomer_settings.get(str(guild.id),{})
+            if not welcomer_cache:
+                return
+            if not welcomer_cache.get('autonick'):
+                return logger.warning(f"Guild {guild.name} has autonick disabled")
+            
+            autonick_format = welcomer_cache.get('autonick_format')
+            if not autonick_format:
+                return logger.warning(f"Guild {guild.name} has no autonick format")
+            
+            autonick_format = fetch_variables(text=autonick_format,member=member,guild=guild)
+            await member.edit(nick=autonick_format,reason="Autonick by Welcomer System")
+        except Exception as e:
+            logger.error(f"Error in file {__file__} at line {traceback.extract_tb(sys.exc_info()[2])[0][1]}: {e}")
+    
+    async def guild_greet_module(self,member:discord.Member):
+        guild = member.guild
+        try:
+            welcomer_cache = self.bot.cache.welcomer_settings.get(str(guild.id),{})
+            if not welcomer_cache:
+                return
+            if not welcomer_cache.get('greet'):
+                return logger.error(f"Guild {member.guild.name} has greeting disabled")
+            channel_ids = welcomer_cache.get('greet_channels', [])
+            if not channel_ids:
+                return logger.error(f"Channel ID not found for greeting in {member.guild.name}")
+            for channel_id in channel_ids:
+                try:
+                    channel = guild.get_channel(int(channel_id))
+                    if not channel:
+                        return logger.error(f"Channel not found for greeting in {member.guild.name}")
+                    message_content = fetch_variables(text=welcomer_cache.get('greet_message'),member=member,guild=guild)
+                    if message_content:
+                        await channel.send(content=message_content,delete_after=welcomer_cache.get('greet_delete_after',5))
+                    await asyncio.sleep(1)
+                except Exception as e:
+                    logger.error(f"Error in on_member_join.guild_greet_module: {e}")
+        except Exception as e:
+            logger.error(f"Error in on_member_join.guild_greet_module: {e}")
+
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member: discord.Member):
+        try:
+            asyncio.create_task(self.anti_bot_add_module(member))
+        except Exception as e:
+            pass
+        try:
+            asyncio.create_task(self.join_log(member))
+        except Exception as e:
+            pass
+        try:
+            asyncio.create_task(self.guild_welcome_module(member))
+        except Exception as e:
+            pass
+        try:
+            asyncio.create_task(self.guild_autorole_module(member))
+        except Exception as e:
+            pass
+        try:
+            asyncio.create_task(self.guild_autonick_module(member))
+        except Exception as e:
+            pass
+        try:
+            asyncio.create_task(self.guild_greet_module(member))
+        except Exception as e:
+            pass
+
+
