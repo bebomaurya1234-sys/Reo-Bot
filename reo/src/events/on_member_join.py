@@ -45,17 +45,17 @@ class on_member_join(commands.Cog):
     ),
     color=0xF5D6E3
 )
+            
+        embed.set_author(name="Zylo Community")
+        embed.set_thumbnail(url=member.display_avatar.url)
+        embed.set_image(url="https://files.catbox.moe/zw2uib.gif")
+        embed.set_footer(text="Zylo Community • Welcome aboard ✦")
 
-embed.set_author(name="Zylo Community")
-
-# Small image on the right
-embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1550933493796569149/1551659525025697893/87d616ee6ae455cbc0e83e20063c08c7.gif?ex=6ab2c70b&is=6ab1758b&hm=47db0cae46f586aab06abe459bb6a503b7f94a8416efd9ceff0bd0213a6d3dce&")
-
-# Big welcome GIF
-embed.set_image(url="https://files.catbox.moe/zw2iub.gif")
-
-embed.set_footer(text="Zylo Community • Welcome aboard ✦")
-            await self.bot.log.send(guild=member.guild,embed=embed,type=f"member_join_channel_id")
+        await self.bot.log.send(
+            guild=member.guild,
+            embed=embed,
+            type="member_join_channel_id"
+        )
         except Exception as e:
             logger.error(f"Error in on_member_join.join_log: {e}")
 
