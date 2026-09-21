@@ -22,23 +22,31 @@ class on_member_join(commands.Cog):
     def __init__(self, bot):
         self.bot: AutoShardedBot = bot
 
-    async def join_log(self,member:discord.Member):
+        async def join_log(self, member: discord.Member):
         try:
             guilds_log_cache = cache.guilds_log.get(str(member.guild.id))
+
             if not guilds_log_cache:
                 return
+
             if not guilds_log_cache.get('enabled'):
-                return logger.error(f"Guild {member.guild.name} has logging disabled")
+                return logger.error(
+                    f"Guild {member.guild.name} has logging disabled"
+                )
+
             channel_id = guilds_log_cache.get('member_join_channel_id')
+
             if not channel_id:
-                return logger.error(f"Channel ID not found for member join log in {member.guild.name}")
-            
-                        embed = discord.Embed(
+                return logger.error(
+                    f"Channel ID not found for member join log in {member.guild.name}"
+                )
+
+            embed = discord.Embed(
                 title="🌸 WELCOME TO ZYLO",
                 description=(
                     f"A warm welcome to {member.mention}! ✨\n\n"
-                    "We're happy to have you with us.\\n"
-                    "Enjoy the vibes, connect with everyone,\\n"
+                    "We're happy to have you with us.\n"
+                    "Enjoy the vibes, connect with everyone,\n"
                     "and make some unforgettable moments. 💙\n\n"
                     "🌙 Stay active • Stay respectful • Have fun\n\n"
                     f"Now we have **{member.guild.member_count} members** <3"
@@ -56,6 +64,7 @@ class on_member_join(commands.Cog):
                 embed=embed,
                 type="member_join_channel_id"
             )
+
         except Exception as e:
             logger.error(f"Error in on_member_join.join_log: {e}")
     add_bot_timeouts = {}
