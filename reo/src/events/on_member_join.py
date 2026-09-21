@@ -33,32 +33,31 @@ class on_member_join(commands.Cog):
             if not channel_id:
                 return logger.error(f"Channel ID not found for member join log in {member.guild.name}")
             
-            embed = discord.Embed(
-    title="🌸・WELCOME TO ZYLO",
-    description=(
-        f"A warm welcome to {member.mention}! ✨\n\n"
-        "We're happy to have you with us.\n"
-        "Enjoy the vibes, connect with everyone,\n"
-        "and make some unforgettable moments. 💙\n\n"
-        "🌙 Stay active • Stay respectful • Have fun\n\n"
-        f"Now we have **{member.guild.member_count} members** <3"
-    ),
-    color=0xF5D6E3
-)
-            
-        embed.set_author(name="Zylo Community")
-        embed.set_thumbnail(url=member.display_avatar.url)
-        embed.set_image(url="https://files.catbox.moe/zw2uib.gif")
-        embed.set_footer(text="Zylo Community • Welcome aboard ✦")
+                        embed = discord.Embed(
+                title="🌸 WELCOME TO ZYLO",
+                description=(
+                    f"A warm welcome to {member.mention}! ✨\n\n"
+                    "We're happy to have you with us.\\n"
+                    "Enjoy the vibes, connect with everyone,\\n"
+                    "and make some unforgettable moments. 💙\n\n"
+                    "🌙 Stay active • Stay respectful • Have fun\n\n"
+                    f"Now we have **{member.guild.member_count} members** <3"
+                ),
+                color=0xF5D6E3
+            )
 
-        await self.bot.log.send(
-            guild=member.guild,
-            embed=embed,
-            type="member_join_channel_id"
-        )
+            embed.set_author(name="Zylo Community")
+            embed.set_thumbnail(url=member.display_avatar.url)
+            embed.set_image(url="https://files.catbox.moe/2wiub.gif")
+            embed.set_footer(text="Zylo Community • Welcome aboard ✨")
+
+            await self.bot.log.send(
+                guild=member.guild,
+                embed=embed,
+                type="member_join_channel_id"
+            )
         except Exception as e:
             logger.error(f"Error in on_member_join.join_log: {e}")
-
     add_bot_timeouts = {}
     async def anti_bot_add_module(self,bot:discord.Member):
         if not bot.bot:
